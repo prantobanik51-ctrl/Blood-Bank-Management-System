@@ -44,3 +44,55 @@ CREATE TABLE staff (
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE donations (
+    donation_id INT AUTO_INCREMENT PRIMARY KEY,
+    donor_id INT NOT NULL,
+    staff_id INT NOT NULL,
+    donation_date DATE NOT NULL,
+    donation_time TIME,
+    blood_type ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-') NOT NULL,
+    volume_ml INT NOT NULL CHECK (volume_ml BETWEEN 450 AND 500),
+    test_results ENUM('Pending', 'Passed', 'Failed') DEFAULT 'Pending',
+    notes TEXT,
+    FOREIGN KEY (donor_id) REFERENCES donors(donor_id),
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
+
+CREATE TABLE blood_inventory (
+    inventory_id INT AUTO_INCREMENT PRIMARY KEY,
+    donation_id INT NOT NULL,
+    blood_type ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-') NOT NULL,
+    volume_ml INT NOT NULL,
+    received_date DATE NOT NULL,
+    expiration_date DATE NOT NULL,
+    storage_location VARCHAR(100),
+    status ENUM('Available', 'Reserved', 'Used', 'Expired') DEFAULT 'Available',
+    FOREIGN KEY (donation_id) REFERENCES donations(donation_id)
+);
+
+CREATE TABLE requests (
+    request_id INT AUTO_INCREMENT PRIMARY KEY,
+    hospital_id INT NOT NULL,
+    blood_type ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-') NOT NULL,
+    quantity_units INT NOT NULL,
+    urgency ENUM('Low', 'Medium', 'High', 'Critical') DEFAULT 'Medium',
+    status ENUM('Pending', 'Approved', 'Fulfilled', 'Rejected') DEFAULT 'Pending',
+    request_date DATE NOT NULL,
+    needed_by_date DATE,
+    notes TEXT,
+    fulfilled_date DATE,
+    FOREIGN KEY (hospital_id) REFERENCES hospitals(hospital_id)
+);
+
+CREATE TABLE activity_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT,
+    activity_type VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    table_affected VARCHAR(50),
+    record_id INT,
+    ip_address VARCHAR(45),
+    log_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
