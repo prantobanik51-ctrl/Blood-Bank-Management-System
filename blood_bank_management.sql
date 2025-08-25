@@ -96,3 +96,36 @@ CREATE TABLE activity_log (
     log_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
 );
+
+-- Insert sample data
+INSERT INTO donors (first_name, last_name, email, phone, date_of_birth, gender, blood_type, address, city) VALUES
+('Pranto', 'Banik', 'prantobanik51@email.com', '01881709817', '2002-12-07', 'Male', 'O+', 'Jhalakathi', 'Barishal'),
+('Jane', 'Smith', 'jane.smith@email.com', '234-567-8901', '1985-08-22', 'Female', 'A-', '456 Oak Ave', 'Shelbyville'),
+('Robert', 'Johnson', 'robert.j@email.com', '345-678-9012', '1992-11-03', 'Male', 'B+', '789 Pine Rd', 'Capital City');
+
+INSERT INTO hospitals (name, address, city, contact_person, phone, email) VALUES
+('City General Hospital', '100 Hospital Drive', 'Springfield', 'Dr. Emily Wilson', '111-222-3333', 'info@citygeneral.org'),
+('County Medical Center', '200 Health Avenue', 'Shelbyville', 'Dr. Michael Chen', '444-555-6666', 'admin@countymedical.org');
+
+INSERT INTO staff (first_name, last_name, email, phone, role, shift, hire_date) VALUES
+('Sarah', 'Miller', 'sarah.m@bloodbank.org', '555-123-4567', 'Nurse', 'Morning', '2020-03-10'),
+('David', 'Brown', 'david.b@bloodbank.org', '555-234-5678', 'Technician', 'Evening', '2021-06-15'),
+('Lisa', 'Taylor', 'lisa.t@bloodbank.org', '555-345-6789', 'Coordinator', 'Morning', '2019-01-20');
+
+INSERT INTO donations (donor_id, staff_id, donation_date, donation_time, blood_type, volume_ml, test_results) VALUES
+(1, 1, '2023-10-05', '09:30:00', 'O+', 450, 'Passed'),
+(2, 2, '2023-10-06', '14:15:00', 'A-', 480, 'Passed'),
+(3, 1, '2023-10-07', '10:45:00', 'B+', 460, 'Pending');
+
+INSERT INTO blood_inventory (donation_id, blood_type, volume_ml, received_date, expiration_date, storage_location) VALUES
+(1, 'O+', 450, '2023-10-05', '2023-11-19', 'Fridge A1'),
+(2, 'A-', 480, '2023-10-06', '2023-11-20', 'Fridge B2');
+
+INSERT INTO requests (hospital_id, blood_type, quantity_units, urgency, status, request_date, needed_by_date) VALUES
+(1, 'O+', 2, 'High', 'Fulfilled', '2023-10-08', '2023-10-10'),
+(2, 'A-', 1, 'Medium', 'Approved', '2023-10-09', '2023-10-15');
+
+INSERT INTO activity_log (staff_id, activity_type, description, table_affected, record_id) VALUES
+(1, 'ADD', 'Added new donor John Doe', 'donors', 1),
+(3, 'UPDATE', 'Updated inventory for donation #1', 'blood_inventory', 1),
+(2, 'REQUEST', 'Processed blood request from City General Hospital', 'requests', 1);
